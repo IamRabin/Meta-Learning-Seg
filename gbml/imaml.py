@@ -55,8 +55,12 @@ class iMAML(GBML):
     @torch.enable_grad()
     def hv_prod(self, in_grad, x, params):
         hv = torch.autograd.grad(in_grad, params, retain_graph=True, grad_outputs=x)
-        hv = torch.nn.utils.parameters_to_vector(hv).detach()
-        # precondition with identity matrix
+        vec = []
+        for param in hv:
+            vec.append(param.reshape(-1))
+        hv=torch.cat(vec).detach()
+       # hv = torch.nn.utils.parameters_to_vector(hv).detach()
+        # precondition with identity matrixparameters
         return hv/self.lamb + x
 
     def outer_loop(self, batch, is_train):

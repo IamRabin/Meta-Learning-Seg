@@ -153,7 +153,7 @@ class BestTracker:
             total = tp + fp + fn + tn
             accuracy = (tp + tn) / total
 
-            return diceuracy
+            return accuracy
 
         ################
         def log_images (x,  y_pred,  y_true=None, channel=1):

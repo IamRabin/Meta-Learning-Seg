@@ -27,13 +27,13 @@ def train(args, model, dataloader):
             loss_list.append(loss_log)
             dice_list.append(dice_log)
             grad_list.append(grad_log)
-            pbar.set_description('loss = {:.4f} || acc={:.4f} || grad={:.4f}'.format(np.mean(loss_list), np.mean(dice_list), np.mean(grad_list)))
+            pbar.set_description('loss = {:.4f} || dice={:.4f} || grad={:.4f}'.format(np.mean(loss_list), np.mean(dice_list), np.mean(grad_list)))
             if batch_idx >= args.num_train_batches:
                 break
 
-    loss = np.round(np.mean(loss_list), 4)
-    dice= np.round(np.mean(dice_list), 4)
-    grad = np.round(np.mean(grad_list), 4)
+    loss = np.round(np.mean(loss_list), 1)
+    dice= np.round(np.mean(dice_list), 1)
+    grad = np.round(np.mean(grad_list), 1)
 
     return loss, dice, grad
 
@@ -186,13 +186,13 @@ def parse_args():
     parser.add_argument('--num_workers', type=int, default=4,
         help='Number of workers for data loading (default: 4).')
     # training settings
-    parser.add_argument('--num_epoch', type=int, default=10,
+    parser.add_argument('--num_epoch', type=int, default=100,
         help='Number of epochs for meta train.')
     parser.add_argument('--batch_size', type=int, default=1,
         help='Number of tasks in a mini-batch of tasks (default: 1).')
-    parser.add_argument('--num_train_batches', type=int, default=10,
+    parser.add_argument('--num_train_batches', type=int, default=100,
         help='Number of batches the model is trained over (default: 250).')
-    parser.add_argument('--num_valid_batches', type=int, default=10,
+    parser.add_argument('--num_valid_batches', type=int, default=100,
         help='Number of batches the model is trained over (default: 150).')
     # meta-learning settings
     parser.add_argument('--num_shot', type=int, default=5,
@@ -207,14 +207,14 @@ def parse_args():
 
     parser.add_argument('--num_test_task', type=int, default=1,
         help='Number of test tasks ( default: 1).')
-    parser.add_argument('--num_task', type=int, default=10,
+    parser.add_argument('--num_task', type=int, default=20,
         help='Number of  tasks ( default: 10).')
     # algorithm settings
 
     parser.add_argument('--n_inner', type=int, default=5)
-    parser.add_argument('--inner_lr', type=float, default=1e-2)
+    parser.add_argument('--inner_lr', type=float, default=1e-4)
     parser.add_argument('--inner_opt', type=str, default='SGD')
-    parser.add_argument('--outer_lr', type=float, default=1e-3)
+    parser.add_argument('--outer_lr', type=float, default=1e-4)
     parser.add_argument('--outer_opt', type=str, default='Adam')
     parser.add_argument('--lr_sched', type=lambda x: (str(x).lower() == 'true'), default=False)
     # network settings
