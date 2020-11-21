@@ -43,6 +43,11 @@ def dice_coef_metric(hist):
     avg_dsc=np.nanmean(dsc) #the mean of dsc without NaNs
     return avg_dsc
 
+def dice_coef(inputs, target):
+    intersection = 2.0 * (target * inputs).sum()+1e-4
+    sum_ = target.sum() + inputs.sum()+1e-4
+
+    return intersection / sum_
 
 def dice_coef_loss(y_pred, y_true):
       smooth=1.0

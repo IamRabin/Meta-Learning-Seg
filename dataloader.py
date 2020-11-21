@@ -1,7 +1,12 @@
 from PIL import Image, ImageOps
 from torch.utils.data import Dataset
-from random import random, randint
+import torch
+import pandas as pd
+import numpy as np
+import random
 
+trainframe=pd.read_csv("/content/train_data.csv")
+testframe=pd.read_csv("/content/test_data.csv")
 
 class Task(object):
       def __init__(self,all_classes,num_classes,num_instances):
@@ -65,37 +70,35 @@ class TestTask(object):
               #self.train_labels.append(paths.iloc[idx][1])
             label+=1
 
-def handle_task(task):
+
+def handle_task(task,transform):
     img_list, msk_list=[],[]
     for each_path in task:
         image=Image.open(each_path[0])
         mask=Image.open(each_path[1]).convert('L')
         image=transform(image)
         mask=transform(mask)
-        image=np.array(image)
-        mask=np.array(mask)
         img_list.append(image)
         msk_list.append(mask)
 
-    img_arr=np.array(img_list)
-    msk_arr=np.array(msk_list)
-    img_arr=img_arr.reshape(len(task),3,image.shape[1],image.shape[2])
-    msk_arr=msk_arr.reshape(len(task),1,mask.shape[1],mask.shape[2])
-    return img_arr,msk_arr
+    img_tensor=torch.stack(img_list)
+    msk_tensor=torch.stack(msk_list)
+    img_tensor=torch.reshape(img_tensor,(len(task),3,image.shape[1],image.shape[2]))
+    msk_tensor=torch.reshape(msk_tensor,(len(task),1,mask.shape[1],mask.shape[2]))
+    return img_tensor,msk_tensor
+
 
 
 class MiniSet(Dataset):
-  def __init__(self,fileroots,labels,transform):
-    self.fileroots=fileroots
-    self.labels=labels
+  def __init__(self,fileroots,transform):
+    self.tasks=fileroots
     self.transform=transform
 
   def __len__(self):
-    return len(self.fileroots)
+    return len(self.tasks)
 
   def __getitem__(self,idx):
-    img=Image.open(self.fileroots[idx])
-    mask=Image.open(self.labels[idx]).convert('L')
-    img=self.transform(img)
-    mask=self.transform(mask)
-    return [img,mask]
+        task=self.tasks[idx]
+        img_tens,msk_tens= handle_task(task,self.transform)
+
+        return [img_tens,msk_tens]

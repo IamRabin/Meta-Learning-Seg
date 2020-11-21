@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import os
 
-from net.convnet import ConvNet
+
 from net.Att_Unet import Att_Unet
 
 class GBML:
@@ -16,9 +16,8 @@ class GBML:
         return None
 
     def _init_net(self):
-        if self.args.net == 'Att_Unet':
-            self.network = Att_Unet()
 
+        self.network = Att_Unet()
         self.network.train()
         self.network.cuda()
         return None

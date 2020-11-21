@@ -97,25 +97,24 @@ def main(args):
 
     transform=transforms.Compose([transforms.Resize((256,256)),
                                                          transforms.ToTensor(),
-                                                          transforms.Normalize(np.array([0.485, 0.456, 0.406]),
-                                                                                             np.array([0.229, 0.224, 0.225]))
-                                                    ])
+                                                         transforms.Normalize((0.5,), (0.5,))
+                                                         ])
 
 
 
 
-    trainframe=pd.read_csv("train_data.csv")
-    testframe=pd.read_csv("test_data.csv")
+    trainframe=pd.read_csv("/content/train_data.csv")
+    testframe=pd.read_csv("/content/test_data.csv")
     train_classes=np.unique(trainframe["ID"])
     train_classes=list(train_classes)
     all_test_classes=np.unique(testframe["ID"])
-    all_test_classes=list(test_classes)
+    all_test_classes=list(all_test_classes)
 
     num_classes=args.num_way
     num_instances=args.num_shot
 
     num_test_classes=args.num_test_classes
-    num_test_instances=args.num_test_shot
+    num_test_instances=args.num_shot
 
 
 
@@ -138,24 +137,24 @@ def main(args):
 
 
 
-    trainloader=DataLoader(MiniSet(train_fileroots_alltask,transform),
+    trainloader=DataLoader(MiniSet(train_fileroots_alltask,transform=transform),
                                             batch_size=1,num_workers=4, pin_memory=True,shuffle=True)
 
-    validloader = DataLoader(MiniSet(meta_fileroots_alltask,transform),
+    validloader = DataLoader(MiniSet(meta_fileroots_alltask,transform=transform),
                            batch_size=1, shuffle=True, num_workers=4,  pin_memory=True)
 
 
-    meta_train_trainloader=DataLoader(MiniSet(train_fileroots_all_task,transform),
+    meta_train_trainloader=DataLoader(MiniSet(train_fileroots_all_task,transform=transform),
                             batch_size=1,shuffle=True, num_workers=4,  pin_memory=True)
 
 
-    testloader=DataLoader(MiniSet(test_fileroots_alltask,transform),
+    testloader=DataLoader(MiniSet(test_fileroots_alltask,transform=transform),
                          batch_size=1,shuffle=True, num_workers=4,  pin_memory=True)
 
 
     for epoch in range(args.num_epoch):
 
-        res, is_best = run_epoch(epoch, args, model,zip(train_loader, valid_loader), zip(meta_train_trainloader,test_loader))
+        res, is_best = run_epoch(epoch, args, model,train_loader=zip(trainloader,validloader), test_loader=zip(meta_train_trainloader,testloader))
         dict2tsv(res, os.path.join(args.result_path, args.alg, args.log_path))
 
         if is_best:
@@ -172,7 +171,7 @@ def parse_args():
 
     parser = argparse.ArgumentParser('Gradient-Based Meta-Learning Algorithms')
     # experimental settings
-    parser.add_argument('--root_dir', type=str, default="./ml_polyp")
+    parser.add_argument('--root_dir', type=str, default="./content")
     parser.add_argument('--seed', type=int, default=2020,
         help='Random seed.')
     parser.add_argument('--data_path', type=str, default='../data/',
@@ -187,25 +186,29 @@ def parse_args():
     parser.add_argument('--num_workers', type=int, default=4,
         help='Number of workers for data loading (default: 4).')
     # training settings
-    parser.add_argument('--num_epoch', type=int, default=400,
+    parser.add_argument('--num_epoch', type=int, default=10,
         help='Number of epochs for meta train.')
-    parser.add_argument('--batch_size', type=int, default=4,
-        help='Number of tasks in a mini-batch of tasks (default: 4).')
-    parser.add_argument('--num_train_batches', type=int, default=250,
+    parser.add_argument('--batch_size', type=int, default=1,
+        help='Number of tasks in a mini-batch of tasks (default: 1).')
+    parser.add_argument('--num_train_batches', type=int, default=10,
         help='Number of batches the model is trained over (default: 250).')
-    parser.add_argument('--num_valid_batches', type=int, default=150,
+    parser.add_argument('--num_valid_batches', type=int, default=10,
         help='Number of batches the model is trained over (default: 150).')
     # meta-learning settings
-    parser.add_argument('--num_shot', type=int, default=10,
-        help='Number of support examples per class (k in "k-shot", default: 10).')
-    parser.add_argument('--num_query', type=int, default=10,
-        help='Number of query examples per class (k in "k-query", default: 10).')
+    parser.add_argument('--num_shot', type=int, default=5,
+        help='Number of support examples per class (k in "k-shot", default: 5).')
+    parser.add_argument('--num_query', type=int, default=5,
+        help='Number of query examples per class (k in "k-query", default: 5).')
     parser.add_argument('--num_way', type=int, default=3,
         help='Number of classes per task (N in "N-way", default: 3).')
     parser.add_argument('--num_test_classes', type=int, default=1,
             help='Number of classes in meta training testing set (N in "N-way", default: 1).')
-    parser.add_argument('--alg', type=str, default='MAML')
+    parser.add_argument('--alg', type=str, default='iMAML')
 
+    parser.add_argument('--num_test_task', type=int, default=1,
+        help='Number of test tasks ( default: 1).')
+    parser.add_argument('--num_task', type=int, default=10,
+        help='Number of  tasks ( default: 10).')
     # algorithm settings
 
     parser.add_argument('--n_inner', type=int, default=5)
