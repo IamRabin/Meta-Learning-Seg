@@ -27,7 +27,7 @@ def train(args, model, dataloader):
             loss_list.append(loss_log)
             dice_list.append(dice_log)
             grad_list.append(grad_log)
-            pbar.set_description('loss = {:.4f} || dice={:.4f} || grad={:.4f}'.format(np.mean(loss_list), np.mean(dice_list), np.mean(grad_list)))
+            pbar.set_description('loss = {:.4f} || tdice={:.4f} || grad={:.4f}'.format(np.mean(loss_list), np.mean(dice_list), np.mean(grad_list)))
             if batch_idx >= args.num_train_batches:
                 break
 
@@ -48,8 +48,8 @@ def valid(args, model, dataloader):
             loss_log, dice_log = model.outer_loop(batch, is_train=False)
 
             loss_list.append(loss_log)
-            acc_list.append(dice_log)
-            pbar.set_description('loss = {:.4f} || dice={:.4f}'.format(np.mean(loss_list), np.mean(dice_list)))
+            dice_list.append(dice_log)
+            pbar.set_description('loss = {:.4f} || vdice={:.4f}'.format(np.mean(loss_list), np.mean(dice_list)))
             if batch_idx >= args.num_valid_batches:
                 break
 
@@ -70,8 +70,7 @@ def run_epoch(epoch, args, model, train_loader, test_loader):
     res['train_loss'] = train_loss
     res['train_dice'] = train_dice
     res['train_grad'] = train_grad
-    res['valid_loss'] = valid_loss
-    res['valid_dice'] = valid_dice
+
     res['test_loss'] = test_loss
     res['test_dice'] = test_dice
 
@@ -213,18 +212,10 @@ def parse_args():
 
     parser.add_argument('--n_inner', type=int, default=5)
     parser.add_argument('--inner_lr', type=float, default=1e-4)
-    parser.add_argument('--inner_opt', type=str, default='SGD')
+    parser.add_argument('--inner_opt', type=str, default='Adam')
     parser.add_argument('--outer_lr', type=float, default=1e-4)
     parser.add_argument('--outer_opt', type=str, default='Adam')
     parser.add_argument('--lr_sched', type=lambda x: (str(x).lower() == 'true'), default=False)
-    # network settings
-    parser.add_argument('--net', type=str, default='ConvNet')
-    parser.add_argument('--n_conv', type=int, default=4)
-    parser.add_argument('--n_dense', type=int, default=0)
-    parser.add_argument('--hidden_dim', type=int, default=64)
-    parser.add_argument('--in_channels', type=int, default=3)
-    parser.add_argument('--hidden_channels', type=int, default=64,
-        help='Number of channels for each convolutional layer (default: 64).')
 
     args = parser.parse_args()
 

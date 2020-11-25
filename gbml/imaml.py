@@ -87,8 +87,12 @@ class iMAML(GBML):
                 outer_loss = bce_dice_loss(test_logit, test_target)
                 loss_log += outer_loss.item()/self.batch_size
 
+                out_cut = np.copy(test_logit.data.cpu().numpy())
+                out_cut[np.nonzero(out_cut < 0.3)] = 0.0  #threshold
+                out_cut[np.nonzero(out_cut >= 0.3)] = 1.0
+
                 with torch.no_grad():
-                    dice_log += dice_coef(test_logit, test_target).item()/self.batch_size
+                    dice_log += dice_coef(out_cut, test_target.data.cpu().numpy()).item()/self.batch_size
 
                 if is_train:
                     params = list(fmodel.parameters(time=-1))

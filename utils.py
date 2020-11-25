@@ -104,22 +104,21 @@ class BestTracker:
         functools.update_wrapper(self, func)
         self.func = func
         self.best_epoch = 0
-        self.best_valid_dice= 0
         self.best_test_dice= 0
 
     def __call__(self, *args, **kwargs):
         res = self.func(*args, **kwargs)
 
-        if res['valid_dice'] > self.best_valid_dice:
+        if res['test_dice'] > self.best_test_dice:
             self.best_epoch = res['epoch']
-            self.best_valid_dice = res['valid_dice']
+
             self.best_test_dice = res['test_dice']
             is_best = True
         else:
             is_best = False
 
         res['best_epoch'] = self.best_epoch
-        res['best_valid_dice'] = self.best_valid_dice
+    
         res['best_test_dice'] = self.best_test_dice
 
         return res, is_best
