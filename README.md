@@ -13,7 +13,7 @@ Empirical results were obtained by meta-training on N way k shot tasks from thre
 
  |        Task            |  Dice score |
  
- | 3-way  10=shot  |   75.54 %   |
+ | 3-way  10-shot  |   75.54 %   |
 
  ## Sample predictions(Red) over groundtruth(Green)
 
