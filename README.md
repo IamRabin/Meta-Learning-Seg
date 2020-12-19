@@ -1,4 +1,4 @@
-# Meta-Learning-Seg
+# Meta-Learning Polyp Segmentation
 Optmization based meta -Learning has been applied in medical setting to perform segmentation. It can be a significant method to tackle the data scarcity problem in medical domain. This repo. contains code  related to my master thesis project. The pre-trained weights of Unet model trained on brain MRI images were used to initialize the model ; which is a open source available at https://pytorch.org/hub/mateuszbuda_brain-segmentation-pytorch_unet/,thanks to "mateuszbuda" .
 
 # Data
