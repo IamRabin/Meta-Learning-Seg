@@ -3,7 +3,7 @@ Optmization based meta -Learning has been applied in medical setting to perform 
 
 # Data
 
-Dataset used are publicly available at https://datasets.simula.no/kvasir-seg/) and https://polyp.grand-challenge.org/Databases/. It consists of images of polyps in GI tract and their corresponding masks. Tasks for meta-learning were generated from the available data sources.
+Dataset used are publicly available at https://datasets.simula.no/kvasir-seg/ and https://polyp.grand-challenge.org/Databases/. It consists of images of polyps in GI tract and their corresponding masks. Tasks for meta-learning were generated from the available data sources.
 
 # Run
 srun meta.sh
@@ -17,4 +17,5 @@ Empirical results were obtained by meta-training on N way k shot tasks from thre
 
  ## Sample predictions(Red) over groundtruth(Green)
 
- ![Green- GT, Red- Pred](./imgs/pred.png)
+ ![](./imgs/pred.png)
+ Green- GT, Red- Pred
