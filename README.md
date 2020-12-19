@@ -18,4 +18,5 @@ Empirical results were obtained by meta-training on N way k shot tasks from thre
  ## Sample predictions(Red) over groundtruth(Green)
 
  ![](./imgs/pred.png)
+ 
  Green- GT, Red- Pred
