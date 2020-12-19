@@ -34,26 +34,8 @@ def mix_grad(grad_list, weight_list):
         mixed_grad.append(torch.sum(g_list, dim=0))
     return mixed_grad
 
-def grad_to_cos(grad_list):
-    '''
-    generate cosine similarity from list of gradient
-    '''
-    cos = 0.
-    for g_list in zip(*grad_list):
-        g_list = torch.stack(g_list)
-        g_list = g_list.reshape(g_list.shape[0], -1) # (n, p)
-        g_sum = torch.sum(g_list,dim=0) # (p)
-        cos += torch.sum(g_list * g_sum.unsqueeze(0), dim=1) # (n)
-    cos = cos/torch.sum(cos)
-    return cos
 
-def loss_to_ent(loss_list, lamb=1.0, beta=1.0):
-    '''
-    generate entropy weight from list of loss (uncertainty in loss function)
-    '''
-    loss_list = np.array(loss_list)
-    ent = 1./(lamb + beta * loss_list)
-    return ent
+
 
 def set_seed(seed):
     # for reproducibility.
@@ -118,7 +100,7 @@ class BestTracker:
             is_best = False
 
         res['best_epoch'] = self.best_epoch
-    
+
         res['best_test_dice'] = self.best_test_dice
 
         return res, is_best

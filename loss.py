@@ -1,6 +1,7 @@
 import torch.nn as nn
 import torch
 import numpy as np
+import math
 
 
 
@@ -61,7 +62,8 @@ def dice_coef_loss(y_pred, y_true):
 
 def bce_dice_loss(y_pred, y_true):
     dicescore = dice_coef_loss(y_pred, y_true)
+    log_cosh_dice=math.log(math.cosh(dicescore))
     bcescore = nn.BCELoss()
     m = nn.Sigmoid()
-    bceloss = bcescore(m(y_pred), y_true)
-    return (bceloss + dicescore)
+    bceloss = bcescore(m(y_pred), y_true)+log_cosh_dice
+    return (bceloss)

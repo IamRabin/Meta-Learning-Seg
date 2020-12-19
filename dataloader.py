@@ -5,14 +5,20 @@ import pandas as pd
 import numpy as np
 import random
 
-trainframe=pd.read_csv("/content/train_data.csv")
-testframe=pd.read_csv("/content/test_data.csv")
+
+
+
+
+
+
+
 
 class Task(object):
-      def __init__(self,all_classes,num_classes,num_instances):
+      def __init__(self,all_classes,num_classes,num_instances,trainframe):
         self.all_classes=all_classes
         self.num_classes=num_classes
         self.num_instances=num_instances
+        self.trainframe=trainframe
         self.train_roots=[]
         self.meta_roots=[]
         #self.train_labels=[]
@@ -39,21 +45,22 @@ class Task(object):
 
 
 class TestTask(object):
-      def __init__(self,all_classes,num_classes,num_instances,num_test_instances):
+      def __init__(self,all_classes,num_classes,num_instances,num_test_instances,testframe):
         self.all_classes=all_classes
         self.num_classes=num_classes
         self.num_instances=num_instances
+        self.testframe=testframe
         self.num_test_instances=num_test_instances
         self.test_roots=[]
         self.train_roots=[]
 
-        samples_per_class=20
+        samples_per_class=195
         sampled_classes= random.sample(all_classes,num_classes)
         label=0
         #labels=list(range(len(sampled_classes)))
 
         for c in sampled_classes:
-            cframe=testframe[testframe["ID"]==c].sample(100)
+            cframe=testframe[testframe["ID"]==c].sample(195)
             cframe.reset_index(inplace=True,drop=True)
             paths=cframe[["Image_path","Label_path"]]
             sample_idxs=np.random.choice(samples_per_class,samples_per_class,replace=False)
@@ -74,10 +81,11 @@ class TestTask(object):
 def handle_task(task,transform):
     img_list, msk_list=[],[]
     for each_path in task:
-        image=Image.open(each_path[0])
-        mask=Image.open(each_path[1]).convert('L')
-        image=transform(image)
-        mask=transform(mask)
+        image=np.array(Image.open(each_path[0]))
+        mask=np.array(Image.open(each_path[1]).convert('L'))
+        augmented=transform(image=image,mask=mask)
+        image=augmented["image"]
+        mask=augmented["mask"]
         img_list.append(image)
         msk_list.append(mask)
 
