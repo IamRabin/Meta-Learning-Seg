@@ -3,7 +3,7 @@ Optmization based meta -Learning has been applied in medical setting to perform 
 
 # Data
 
-Dataset used are publicly available  on [Medico 2020](https://multimediaeval.github.io/editions/2020/tasks/medico/) and [CVC] (https://polyp.grand-challenge.org/Databases/).  It consists of images of polyps in GI tract and their corresponding masks. Tasks for meta-learning were generated from the available data sources.
+Dataset used are publicly available  on [Medico 2020](https://multimediaeval.github.io/editions/2020/tasks/medico/) and [CVC](https://polyp.grand-challenge.org/Databases/).  It consists of images of polyps in GI tract and their corresponding masks. Tasks for meta-learning were generated from the available data sources.
 
 # Run
 srun meta.sh
