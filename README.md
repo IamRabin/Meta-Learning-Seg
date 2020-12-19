@@ -9,7 +9,8 @@ Dataset used are publicly available  on /multimediaeval.github.io/editions/2020/
 srun meta.sh
 
 # Result
-Empirical results were obtained by meta-training on N way k shot tasks from three different dataset and tested on the held out fourth dataset.  The best dice score was obtained by training with 20 tasks under 3 way 10 shot  scheme.
+Empirical results were obtained by meta-training on N way k shot tasks from three different dataset and tested on the held out fourth dataset. The best dice score was obtained by training with 20 tasks under 3 way 10 shot  scheme.
+
  |        Task            |  Dice score |
  
  | 3-way  10=shot  |   75.54 %   |
