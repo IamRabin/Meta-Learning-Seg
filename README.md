@@ -19,4 +19,4 @@ Empirical results were obtained by meta-training on N way k shot tasks from thre
 
  ![](./imgs/pred.png)
  
- Fig 1:Green- GT, Red- Pred
+ Fig 1: Green- GT, Red- Pred
